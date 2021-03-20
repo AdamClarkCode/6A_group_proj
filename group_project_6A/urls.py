@@ -21,4 +21,5 @@ from rango import views
 urlpatterns = [
     path('', views.home, name='home'),
     path('story/', include('rango.urls')),
+    path('account/', include('rango.urls'))
 ]

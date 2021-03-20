@@ -1,5 +1,8 @@
 from django import forms
 from rango.models import Story
+from django.contrib.auth.models import User
+from rango.models import UserProfile
+
 
 class StoryForm(forms.ModelForm):
     name = forms.CharField(max_length=128,
@@ -10,3 +13,15 @@ class StoryForm(forms.ModelForm):
     class Meta:
         model = Story
         fields = ('name',)
+
+class UserForm(forms.ModelForm):
+    password = forms.CharField(widget=forms.PasswordInput())
+    
+    class Meta:
+        model = User
+        fields = ('username', 'email', 'password',)
+
+class UserProfileForm(forms.ModelForm):
+    class Meta:
+        model = UserProfile
+        fields = ('picture',)
