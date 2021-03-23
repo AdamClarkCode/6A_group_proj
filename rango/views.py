@@ -1,8 +1,9 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from rango.forms import StoryForm
-from django.shortcuts import redirect
-from rango.forms import UserForm, UserProfileForm
+from rango.forms import StoryForm, UserForm, UserProfileForm
+from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.decorators import login_required
+from django.urls import reverse
 
 
 # Create your views here.
@@ -67,3 +68,37 @@ def register(request):
         context = {'user_form': user_form,
         'profile_form': profile_form,
         'registered': registered})
+        
+def user_login(request):
+    # If the request is a HTTP POST, try to pull out the relevant information.
+    if request.method == 'POST':
+        # Gather the username and password from login form.
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        # If valid, return user object
+        user = authenticate(username=username, password=password)
+        if user:
+            if user.is_active:
+                # If the account is valid and active, we can log the user in.
+                login(request, user)
+                return redirect(reverse('rango:home'))
+            else:
+                return HttpResponse("Your account is disabled.")
+        else:
+            # Bad login details were provided so user cannot log in.
+            print(f"Invalid login details: {username}, {password}")
+            return HttpResponse("Invalid login details supplied.")
+    # The request is not a HTTP POST, so display the login form.
+    # This scenario would most likely be a HTTP GET.
+    else:
+        # No context variables to pass to the template system, hence the blank dictionary object.
+        return render(request, 'account/login.html')
+    
+    
+# login_required() decorator ensures only those logged in can access the view.
+@login_required
+def user_logout(request):
+    logout(request)
+    # Take the user back to the homepage.
+    return redirect(reverse('rango:home'))
+

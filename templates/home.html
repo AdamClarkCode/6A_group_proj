@@ -6,7 +6,12 @@
     <body>
         <div>
             <a href="/story/add_story/">Add a New Story</a><br />
-			<a href="/account/register/">Sign Up</a><br />
+			{% if user.is_authenticated %}
+			<a href="{% url 'rango:logout' %}">Logout</a><br />
+			{% else %}
+			<a href="{% url 'rango:register' %}">Sign Up</a><br />
+			<a href="{% url 'rango:login' %}">Login</a><br />
+			{% endif %}
         </div>
     </body>
 </html>
