@@ -6,10 +6,12 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 
 
+
 # Create your views here.
 
 def home(request):
     return render(request, 'home.html')
+
 
 def add_story(request):
     form = StoryForm()
@@ -101,4 +103,3 @@ def user_logout(request):
     logout(request)
     # Take the user back to the homepage.
     return redirect(reverse('rango:home'))
-
