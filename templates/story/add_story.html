@@ -1,24 +1,16 @@
-<!DOCTYPE html>
-<html>
-    <head>
-        <title>Add a Story</title>
-    </head>
-    
-    <body>
-        <h1>Add a Story</h1>
-        <div>
-            <form id="story_form" method="post" action="/story/add_story/">
-                {% csrf_token %}
-                {% for hidden in form.hidden_fields %}
-                    {{ hidden }}
-                {% endfor %}
-                {% for field in form.visible_fields %}
-                    {{ field.errors }}
-                    {{ field.help_text }}
-                    {{ field }}
-                {% endfor %}
-                <input type="submit" name="submit" value="Create Story" />
-            </form>
-        </div>
-    </body>
-</html>
+{% extends 'base.html' %}
+{load staticfiles %}
+{% block body_block %}
+	<form id="story_form" method="post" action="/story/add_story/">
+		{% csrf_token %}
+		{% for hidden in form.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
+		{% for field in form.visible_fields %}
+			{{ field.errors }}
+			{{ field.help_text }}
+			{{ field }}
+		{% endfor %}
+		<input type="submit" name="submit" value="Create Story" />
+	</form>
+{% endblock %}
