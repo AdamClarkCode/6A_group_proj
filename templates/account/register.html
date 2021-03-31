@@ -1,5 +1,8 @@
 {% extends 'base.html' %}
 {load staticfiles %}
+{% block title_block %}
+<title>Register</title>
+{% endblock %}
 {% block body_block %}
 	<form id="user_form" method="post" action="/account/register/"
 		enctype="multipart/form-data">

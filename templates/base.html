@@ -2,7 +2,9 @@
 {% load staticfiles %}
 <html>
     <head>
-        <title>Homepage</title>
+		{% block title_block %}
+		<title>One Word Story</title>
+		{% endblock %}
 		<link rel="stylesheet" href="{% static "css/base.css" %}" />
     </head>
     <body>
