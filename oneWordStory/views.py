@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from rango.forms import StoryForm, UserForm, UserProfileForm
+from oneWordStory.forms import StoryForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-
+from oneWordStory.models import Story, UserProfile
 
 
 # Create your views here.
@@ -12,6 +12,8 @@ from django.urls import reverse
 def home(request):
     return render(request, 'home.html')
 
+def about(request):
+    return render(request, 'about.html')
 
 def add_story(request):
     form = StoryForm()
@@ -23,6 +25,14 @@ def add_story(request):
         else:
             print(form.errors)
     return render(request, 'story/add_story.html', {'form': form})
+    
+def show_story(request, story_name_slug):
+    story = Story.objects.get(slug=story_name_slug)
+    return render(request, 'story/story.html')
+    
+def show_profile(request, user_name_slug):
+    profile = UserProfile.objects.get(slug=user_name_slug)
+    return render(request, 'account/profile.html')
     
 def register(request):
     # A boolean value for telling the template
@@ -83,7 +93,7 @@ def user_login(request):
             if user.is_active:
                 # If the account is valid and active, we can log the user in.
                 login(request, user)
-                return redirect(reverse('rango:home'))
+                return redirect(reverse('oneWordStory:home'))
             else:
                 return HttpResponse("Your account is disabled.")
         else:
@@ -102,4 +112,4 @@ def user_login(request):
 def user_logout(request):
     logout(request)
     # Take the user back to the homepage.
-    return redirect(reverse('rango:home'))
+    return redirect(reverse('oneWordStory:home'))

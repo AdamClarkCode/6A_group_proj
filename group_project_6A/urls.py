@@ -16,10 +16,12 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.urls import include
-from rango import views
+from oneWordStory import views
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('story/', include('rango.urls')),
-    path('account/', include('rango.urls'))
+    path('about', views.about, name='about'),
+    path('story/', include('oneWordStory.urls')),
+    path('account/', include('oneWordStory.urls')),
+    path('search/', include('oneWordStory.urls')),
 ]

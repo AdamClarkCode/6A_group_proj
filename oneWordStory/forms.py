@@ -1,7 +1,7 @@
 from django import forms
-from rango.models import Story
+from oneWordStory.models import Story
 from django.contrib.auth.models import User
-from rango.models import UserProfile
+from oneWordStory.models import UserProfile
 
 
 class StoryForm(forms.ModelForm):
