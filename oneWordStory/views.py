@@ -104,7 +104,7 @@ def user_login(request):
         else:
             # Bad login details were provided so user cannot log in.
             print(f"Invalid login details: {username}, {password}")
-            return HttpResponse("Invalid login details supplied.")
+            return redirect(reverse('oneWordStory:login'))
     # The request is not a HTTP POST, so display the login form.
     # This scenario would most likely be a HTTP GET.
     else:
