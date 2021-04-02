@@ -10,7 +10,12 @@ from oneWordStory.models import Story, UserProfile
 # Create your views here.
 
 def home(request):
-    return render(request, 'home.html')
+    story_list = Story.objects.order_by('-likes')[:5]
+    context_dict = {}
+    context_dict['featuredStories'] = story_list
+    
+    response = render(request, 'home.html', context=context_dict)
+    return response
 
 def about(request):
     return render(request, 'about.html')
