@@ -4,6 +4,11 @@
 <title>Register</title>
 {% endblock %}
 {% block body_block %}
+{% if registered %}
+<strong>Thank you for registering!</strong>
+<a href="{% url 'oneWordStory:home' %}">Return to the homepage</a><br />
+{% else %}
+
 	<form id="user_form" method="post" action="/account/register/"
 		enctype="multipart/form-data">
 
@@ -14,4 +19,5 @@
 
 		<input type="submit" name="submit" value="Register" />
 	</form>
+{% endif %}
 {% endblock %}

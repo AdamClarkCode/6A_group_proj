@@ -11,8 +11,8 @@
 		 <div class="header">
 			<a href="{% url 'oneWordStory:home' %}" class="logo"><img src="{% static 'images/1wslogo.jpg' %}"  class="logo"/>One Word Story</a>
 			<div class="header-right">
-				<a href="{% url 'oneWordStory:add_story' %}" class="headlink">Add a New Story</a>
 				{% if user.is_authenticated %}
+				<a href="{% url 'oneWordStory:add_story' %}" class="headlink">Add a New Story</a>
 				<a href="{% url 'oneWordStory:logout' %}" class="headlink">Logout</a>
 				{% else %}
 				<a href="{% url 'oneWordStory:register' %}" class="headlink">Sign Up</a>
