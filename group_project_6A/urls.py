@@ -19,9 +19,8 @@ from django.urls import include
 from oneWordStory import views
 
 urlpatterns = [
+    path('admin/', admin.site.urls),
     path('', views.home, name='home'),
     path('about', views.about, name='about'),
-    path('story/', include('oneWordStory.urls')),
-    path('account/', include('oneWordStory.urls')),
-    path('search/', include('oneWordStory.urls')),
+    path('oneWordStory/', include('oneWordStory.urls')),
 ]

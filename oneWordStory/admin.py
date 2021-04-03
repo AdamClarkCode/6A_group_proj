@@ -1,8 +1,8 @@
 from django.contrib import admin
-from oneWordStory.models import Story, UserProfile
+from oneWordStory.models import Story, Word, UserProfile
 
 # Register your models here.
-class StoryAdmin(admin.ModelAdmin):
-    prepopulated_fields = {'slug':('title',)}
 
-admin.site.register(Story, StoryAdmin)
+admin.site.register(Story)
+admin.site.register(UserProfile)
+admin.site.register(Word)
