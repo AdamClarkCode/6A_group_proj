@@ -6,6 +6,7 @@ from django.template.defaultfilters import slugify
 class Story(models.Model):
     title = models.CharField(max_length=128)
     slug = models.SlugField(unique=True)
+    likes = models.IntegerField(default=0)
     
     author = models.ForeignKey(
         'UserProfile', on_delete=models.CASCADE
@@ -23,7 +24,7 @@ class Story(models.Model):
         
 class Word(models.Model):
     content = models.CharField(max_length=128)
-    user = models.ForeignKey(
+    userProfile = models.ForeignKey(
         'UserProfile', on_delete=models.CASCADE
     )
     story = models.ForeignKey(
@@ -39,6 +40,8 @@ class UserProfile(models.Model):
     # Additional attributes to include.
     picture = models.ImageField(upload_to='profile_images', blank=True)
     slug = models.SlugField(unique=True)
+     
+    contributions = models.ManyToManyField('Story')
      
     def save(self, *args, **kwargs):
         self.slug = slugify(self.name)

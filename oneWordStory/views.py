@@ -4,7 +4,7 @@ from oneWordStory.forms import StoryForm, UserForm, UserProfileForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
-from oneWordStory.models import Story, UserProfile
+from oneWordStory.models import Story, UserProfile, Word
 
 
 # Create your views here.
@@ -32,10 +32,38 @@ def add_story(request):
     return render(request, 'story/add_story.html', {'form': form})
     
 def show_story(request, story_name_slug):
-    story = Story.objects.get(slug=story_name_slug)
-    return render(request, 'story/story.html')
+    context_dict = {}
+    try:
+        story = Story.objects.get(slug=story_name_slug)
+        words = Word.objects.filter(story=story)
+        
+        context_dict['story'] = story
+        context_dict['words'] = words
+    except Story.DoesNotExist:
+        context_dict['story'] = None
+        context_dict['words'] = None
+    return render(request, 'story/story.html', context = context_dict)
     
 def show_profile(request, user_name_slug):
+    context_dict = {}
+    try:
+        userProfile = UserProfile.objects.get(slug=user_name_slug)
+        contributions = Story.objects.get()
+        
+        words = Word.objects.filter(userProfile=userProfile)
+        story = UserProfile.objects.filter(contributions=contributions)
+        
+        context_dict['username'] = userProfile
+        context_dict['website'] = userProfile.website
+        context_dict['picture'] = userProfile.picture
+        context_dict['words'] = words
+        context_dict['story'] = story
+    except UserProfile.DoesNotExist:
+        context_dict['username'] = None
+        context_dict['website'] = None
+        context_dict['picture'] = None
+        context_dict['words'] = None
+        context_dict['story'] = None
     profile = UserProfile.objects.get(slug=user_name_slug)
     return render(request, 'account/profile.html')
     
