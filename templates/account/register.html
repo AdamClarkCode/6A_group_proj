@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{load staticfiles %}
+{% load staticfiles %}
 {% block title_block %}
 <title>Register</title>
 {% endblock %}
@@ -9,7 +9,7 @@
 <a href="{% url 'oneWordStory:home' %}">Return to the homepage</a><br />
 {% else %}
 
-	<form id="user_form" method="post" action="/account/register/"
+	<form id="user_form" method="post" action="{% url 'oneWordStory:register' %}"
 		enctype="multipart/form-data">
 
 		{% csrf_token %}

@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-{load staticfiles %}
+{% load staticfiles %}
 {% block title_block %}
 <title>Login</title>
 {% endblock %}
 {% block body_block %}
-	<form id="login_form" method="post" action="/account/login/">
+	<form id="login_form" method="post" action="{% url 'oneWordStory:login' %}">
 		{% csrf_token %}
 		
 		Username: <input type="text" name="username" value="" size="50" /><br />

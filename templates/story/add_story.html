@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-{load staticfiles %}
+{% load staticfiles %}
 {% block title_block %}
 <title>Add Story</title>
 {% endblock %}
 {% block body_block %}
-	<form id="story_form" method="post" action="/story/add_story/">
+	<form id="story_form" method="post" action="{% url 'oneWordStory:add_story' %}">
 		{% csrf_token %}
 		{% for hidden in form.hidden_fields %}
 			{{ hidden }}
