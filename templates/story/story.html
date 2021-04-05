@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title_block %}
+<title>
+{% if story %}
+	{{ story.title }}
+{% else %}
+	Unknown Story
+{% endif %}
+</title>
+{% endblock %}
+{% block body_block %}
+{% if story %}
+	<h1>{{ story.title }}</h1>
+	{% if words %}
+		<ul>
+			{% for word in words %}
+				{{ word.content }} 
+			{% endfor %}
+			</ul>
+	{% else %}
+		This story is empty. Why not add to it?
+	{% endif %}
+	{% if user.is_authenticated %}
+		<h2>Add to this story</h2>
+		<form id="word_form" method="post" action="{% url 'oneWordStory:show_story' story.slug%}">
+		{% csrf_token %}
+		{% for hidden in form.hidden_fields %}
+			{{ hidden }}
+		{% endfor %}
+		{% for field in form.visible_fields %}
+			{{ field.errors }}
+			{{ field.help_text }}
+			{{ field }}
+		{% endfor %}
+		<input type="submit" name="submit" value="Submit" />
+		</form>
+	{% endif %}
+{% else %}
+	The specified story does not exist
+{% endif %}
+{% endblock %}

@@ -1,12 +1,10 @@
 from django import forms
-from oneWordStory.models import Story
 from django.contrib.auth.models import User
-from oneWordStory.models import UserProfile
+from oneWordStory.models import Story, UserProfile, Word
 
 
 class StoryForm(forms.ModelForm):
-    title = forms.CharField(max_length=128,
-    help_text="Please enter the story name.")
+    title = forms.CharField(max_length=128, help_text="Please enter the story name.")
     likes = forms.IntegerField(widget=forms.HiddenInput(), initial=0)
     slug = forms.CharField(widget=forms.HiddenInput(), required=False)
 
@@ -25,3 +23,10 @@ class UserProfileForm(forms.ModelForm):
     class Meta:
         model = UserProfile
         fields = ('picture',)
+
+class WordForm(forms.ModelForm):
+    content = forms.CharField(max_length=128, help_text="What comes next?")
+    
+    class Meta:
+        model = Word
+        fields = ('content',)

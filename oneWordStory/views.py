@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-from oneWordStory.forms import StoryForm, UserForm, UserProfileForm
+from oneWordStory.forms import StoryForm, UserForm, UserProfileForm, WordForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.urls import reverse
@@ -28,23 +28,37 @@ def add_story(request):
             story = form.save(commit=False)
             story.author = UserProfile.objects.get(user = request.user)
             story.save()
-            return redirect('/story/' + story.slug)
+            return redirect('oneWordStory:show_story', story.slug)
         else:
             print(form.errors)
     return render(request, 'story/add_story.html', {'form': form})
     
+
 def show_story(request, story_name_slug):
-    context_dict = {}
-    try:
-        story = Story.objects.get(slug=story_name_slug)
-        words = Word.objects.filter(story=story)
-        
-        context_dict['story'] = story
-        context_dict['words'] = words
-    except Story.DoesNotExist:
-        context_dict['story'] = None
-        context_dict['words'] = None
-    return render(request, 'story/story.html', context = context_dict)
+    form = WordForm()
+    if request.method == 'POST':
+        form = WordForm(request.POST)
+        if form.is_valid():
+            word = form.save(commit=False)
+            word.userProfile = UserProfile.objects.get(user = request.user)
+            word.story = Story.objects.get(slug=story_name_slug)
+            word.save()
+            return redirect('oneWordStory:show_story', story_name_slug)
+        else:
+            print(form.errors)
+    else:
+        context_dict = {}
+        try:
+            story = Story.objects.get(slug=story_name_slug)
+            words = Word.objects.filter(story=story)
+            
+            context_dict['story'] = story
+            context_dict['words'] = words
+            context_dict['form'] = form
+        except Story.DoesNotExist:
+            context_dict['story'] = None
+            context_dict['words'] = None
+        return render(request, 'story/story.html', context = context_dict)
     
 def show_profile(request, user_name_slug):
     context_dict = {}
