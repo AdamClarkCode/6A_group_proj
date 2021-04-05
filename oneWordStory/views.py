@@ -25,8 +25,10 @@ def add_story(request):
     if request.method == 'POST':
         form = StoryForm(request.POST)
         if form.is_valid():
-            form.save(commit=True)
-            return redirect('/story/')
+            story = form.save(commit=False)
+            story.author = UserProfile.objects.get(user = request.user)
+            story.save()
+            return redirect('/story/' + story.slug)
         else:
             print(form.errors)
     return render(request, 'story/add_story.html', {'form': form})
