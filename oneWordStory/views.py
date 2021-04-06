@@ -7,6 +7,8 @@ from django.urls import reverse
 from oneWordStory.models import Story, UserProfile, Word
 from datetime import datetime
 from django.contrib import messages
+from django.views import View
+from django.utils.decorators import method_decorator
 
 # Create your views here.
 def get_server_side_cookie(request, cookie, default_val=None):
@@ -198,8 +200,9 @@ def user_logout(request):
     # Take the user back to the homepage.
     return redirect(reverse('oneWordStory:home'))
     
-@login_required   
-def LikeStoryView(View):
+
+class LikeStoryView(View):
+    @method_decorator(login_required)
     def get(self, request):
         story_name_slug = request.GET['story_slug']
         
