@@ -35,6 +35,13 @@
 		{% endfor %}
 		<input type="submit" name="submit" value="Submit" />
 		</form>
+		{% if messages %}
+		<ul class="messages">
+			{% for message in messages %}
+			<li> {{ message }} </li>
+			{% endfor %}
+		</ul>
+		{% endif %}
 	{% endif %}
 {% else %}
 	The specified story does not exist

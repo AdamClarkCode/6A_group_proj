@@ -6,7 +6,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from oneWordStory.models import Story, UserProfile, Word
 from datetime import datetime
-
+from django.contrib import messages
 
 # Create your views here.
 def get_server_side_cookie(request, cookie, default_val=None):
@@ -69,6 +69,7 @@ def show_story(request, story_name_slug):
             story = Story.objects.get(slug=story_name_slug)
             
             if(word.userProfile == story.lastUser):
+                messages.warning(request, 'You cannot enter two words in a row')
                 return redirect('oneWordStory:show_story', story_name_slug)
                 
             story.lastUser = word.userProfile
@@ -77,6 +78,7 @@ def show_story(request, story_name_slug):
             return redirect('oneWordStory:show_story', story_name_slug)
         else:
             print(form.errors)
+            messages.warning(request, 'Input is invalid, only input one word')
             return redirect('oneWordStory:show_story', story_name_slug)
     else:
         context_dict = {}
