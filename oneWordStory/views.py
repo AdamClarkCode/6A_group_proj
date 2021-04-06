@@ -51,6 +51,11 @@ def add_story(request):
         if form.is_valid():
             story = form.save(commit=False)
             story.author = UserProfile.objects.get(user = request.user)
+            stories = Story.objects.all()
+            for s in stories:
+                if(s.title == story.title):
+                    messages.warning(request, 'Sorry, that story name is unavailable')
+                    return redirect(request.path_info)
             story.save()
             return redirect('oneWordStory:show_story', story.slug)
         else:
