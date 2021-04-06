@@ -8,8 +8,12 @@ class Story(models.Model):
     slug = models.SlugField(unique=True)
     likes = models.IntegerField(default=0)
     
+    lastUser = models.ForeignKey(
+        'UserProfile', models.SET_NULL , null = True
+    )
+    
     author = models.ForeignKey(
-        'UserProfile', on_delete=models.CASCADE
+        'UserProfile',related_name="author", on_delete=models.CASCADE
     )
     class Meta:
         verbose_name_plural = 'Stories'

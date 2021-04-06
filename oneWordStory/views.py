@@ -44,10 +44,6 @@ def home(request):
 
     return response
 
-
-def about(request):
-    return render(request, 'about.html')
-
 def add_story(request):
     form = StoryForm()
     if request.method == 'POST':
@@ -70,10 +66,18 @@ def show_story(request, story_name_slug):
             word = form.save(commit=False)
             word.userProfile = UserProfile.objects.get(user = request.user)
             word.story = Story.objects.get(slug=story_name_slug)
+            story = Story.objects.get(slug=story_name_slug)
+            
+            if(word.userProfile == story.lastUser):
+                return redirect('oneWordStory:show_story', story_name_slug)
+                
+            story.lastUser = word.userProfile
+            story.save()
             word.save()
             return redirect('oneWordStory:show_story', story_name_slug)
         else:
             print(form.errors)
+            return redirect('oneWordStory:show_story', story_name_slug)
     else:
         context_dict = {}
         try:

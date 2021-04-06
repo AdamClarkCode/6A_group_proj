@@ -21,6 +21,5 @@ from oneWordStory import views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.home, name='home'),
-    path('about', views.about, name='about'),
     path('oneWordStory/', include('oneWordStory.urls')),
 ]

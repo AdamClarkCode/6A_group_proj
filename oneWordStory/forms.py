@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from oneWordStory.models import Story, UserProfile, Word
-
+from django.core.exceptions import ValidationError
+from django.core import validators
 
 class StoryForm(forms.ModelForm):
     title = forms.CharField(max_length=128, help_text="Please enter the story name.")
@@ -25,7 +26,7 @@ class UserProfileForm(forms.ModelForm):
         fields = ('picture',)
 
 class WordForm(forms.ModelForm):
-    content = forms.CharField(max_length=128, help_text="What comes next?")
+    content = forms.CharField(max_length=128, help_text="What comes next?",validators=[validators.validate_slug])
     
     class Meta:
         model = Word

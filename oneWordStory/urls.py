@@ -6,7 +6,6 @@ app_name = 'oneWordStory'
 
 urlpatterns = [
     path('', views.home, name='home'),
-    path('about', views.about, name='about'),
     path('story/add_story/', views.add_story, name='add_story'),
     path('account/register/', views.register, name='register'),
     path('account/login/', views.user_login, name='login'),
