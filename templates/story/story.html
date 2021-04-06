@@ -12,6 +12,12 @@
 {% block body_block %}
 {% if story %}
 	<h1>{{ story.title }}</h1>
+	Likes: <strong id="like_count">{{story.likes}}</strong>
+	{% if user.is_authenticated %}
+		<button id="like_btn" data-storyslug="{{story.slug}}" class="btn btn-primary btn-sm" type="button">
+		👍 Like
+		</button>
+	{% endif %}
 	{% if words %}
 		<ul>
 			{% for word in words %}
