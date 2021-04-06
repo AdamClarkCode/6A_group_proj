@@ -1,5 +1,5 @@
 from django.apps import AppConfig
 
 
-class RangoConfig(AppConfig):
+class OWSConfig(AppConfig):
     name = 'oneWordStory'

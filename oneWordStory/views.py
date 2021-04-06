@@ -10,7 +10,6 @@ from django.contrib import messages
 from django.views import View
 from django.utils.decorators import method_decorator
 
-# Create your views here.
 def get_server_side_cookie(request, cookie, default_val=None):
     val = request.session.get(cookie)
     if not val:
@@ -24,7 +23,7 @@ def visitor_cookie_handler(request):
     last_visit_time = datetime.strptime(last_visit_cookie[:-7],'%Y-%m-%d %H:%M:%S')
 
     # If it's been more than a day since the last visit...
-    if (datetime.now() - last_visit_time).seconds > 600:
+    if (datetime.now() - last_visit_time).seconds > 86400:
         visits = visits + 1
 
         request.session['last_visit'] = str(datetime.now())
@@ -36,7 +35,6 @@ def visitor_cookie_handler(request):
 
 def home(request):
     story_list = Story.objects.order_by('-likes')[:5]
-    print(type(story_list))
     context_dict = {}
     context_dict['featuredStories'] = story_list
 
@@ -49,6 +47,8 @@ def home(request):
 
 def search(request):
     story_list = None
+    #If the user has searched for something, return the relevant list
+    #Otherwise the search page will be blank other than the search bar
     if request.method == 'GET' and 's' in request.GET:
         s = request.GET['s']
         if s:
@@ -69,14 +69,18 @@ def add_story(request):
     if request.method == 'POST':
         form = StoryForm(request.POST)
         if form.is_valid():
+            #We create a new story entry in the database, but don't commit until all of the fields are populated
             story = form.save(commit=False)
             story.author = UserProfile.objects.get(user = request.user)
             stories = Story.objects.all()
+            #If the story's title is already in use, redirect the user and discard the new entry
             for s in stories:
                 if(s.title == story.title):
                     messages.warning(request, 'Sorry, that story name is unavailable')
                     return redirect(request.path_info)
+            #If not, save the entry to the database
             story.save()
+            #and redirect them to their new story
             return redirect('oneWordStory:show_story', story.slug)
         else:
             print(form.errors)
@@ -85,14 +89,17 @@ def add_story(request):
 
 def show_story(request, story_name_slug):
     form = WordForm()
+    #If they've submitted a new word to add to the story
     if request.method == 'POST':
         form = WordForm(request.POST)
         if form.is_valid():
+            #Add a new word entry to the database with the appropriate attributes
             word = form.save(commit=False)
             word.userProfile = UserProfile.objects.get(user = request.user)
             word.story = Story.objects.get(slug=story_name_slug)
             story = Story.objects.get(slug=story_name_slug)
             
+            #Prevent the user from submitting multiple words in a row
             if(word.userProfile == story.lastUser):
                 messages.warning(request, 'You cannot enter two words in a row')
                 return redirect('oneWordStory:show_story', story_name_slug)
@@ -105,10 +112,13 @@ def show_story(request, story_name_slug):
             print(form.errors)
             messages.warning(request, 'Input is invalid, only input one word')
             return redirect('oneWordStory:show_story', story_name_slug)
+    
+    #If they're just viewing the story
     else:
         context_dict = {}
         try:
             story = Story.objects.get(slug=story_name_slug)
+            #The words automatically sort by when they were added
             words = Word.objects.filter(story=story)
             
             context_dict['story'] = story
@@ -119,29 +129,6 @@ def show_story(request, story_name_slug):
             context_dict['words'] = None
             context_dict['form'] = None
         return render(request, 'story/story.html', context = context_dict)
-    
-def show_profile(request, user_name_slug):
-    context_dict = {}
-    try:
-        userProfile = UserProfile.objects.get(slug=user_name_slug)
-        contributions = Story.objects.get()
-        
-        words = Word.objects.filter(userProfile=userProfile)
-        story = UserProfile.objects.filter(contributions=contributions)
-        
-        context_dict['username'] = userProfile
-        context_dict['website'] = userProfile.website
-        context_dict['picture'] = userProfile.picture
-        context_dict['words'] = words
-        context_dict['story'] = story
-    except UserProfile.DoesNotExist:
-        context_dict['username'] = None
-        context_dict['website'] = None
-        context_dict['picture'] = None
-        context_dict['words'] = None
-        context_dict['story'] = None
-    profile = UserProfile.objects.get(slug=user_name_slug)
-    return render(request, 'account/profile.html')
     
 def register(request):
     # A boolean value for telling the template
@@ -225,6 +212,7 @@ def user_logout(request):
     
 
 class LikeStoryView(View):
+    #Works in tandem with ajax to update the number of likes when the like button is clicked
     @method_decorator(login_required)
     def get(self, request):
         story_name_slug = request.GET['story_slug']

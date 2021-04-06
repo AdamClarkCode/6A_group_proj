@@ -2,7 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.template.defaultfilters import slugify
 
-# Create your models here.
 class Story(models.Model):
     title = models.CharField(max_length=128)
     slug = models.SlugField(unique=True)
@@ -15,6 +14,7 @@ class Story(models.Model):
     author = models.ForeignKey(
         'UserProfile',related_name="author", on_delete=models.CASCADE
     )
+    
     class Meta:
         verbose_name_plural = 'Stories'
 
@@ -31,6 +31,7 @@ class Word(models.Model):
     userProfile = models.ForeignKey(
         'UserProfile', on_delete=models.CASCADE
     )
+    
     story = models.ForeignKey(
         'Story', on_delete=models.CASCADE
     )
@@ -41,12 +42,12 @@ class Word(models.Model):
 class UserProfile(models.Model):
     # Links UserProfile to a User model instance.
     user = models.OneToOneField(User, on_delete=models.CASCADE)
+    
     # Additional attributes to include.
     picture = models.ImageField(upload_to='profile_images', blank=True)
     slug = models.SlugField(unique=True)
-     
     contributions = models.ManyToManyField('Story')
-     
+    
     def save(self, *args, **kwargs):
         self.slug = slugify(self.user.username)
         super(UserProfile, self).save(*args, **kwargs)

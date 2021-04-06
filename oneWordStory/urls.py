@@ -11,7 +11,6 @@ urlpatterns = [
     path('account/login/', views.user_login, name='login'),
     path('logout/', views.user_logout, name='logout'),
     path('story/<slug:story_name_slug>/', views.show_story, name='show_story'),
-    path('account/<slug:user_name_slug>/', views.show_profile, name='show_profile'),
     path('like_story/', views.LikeStoryView.as_view(), name='like_story'),
     path('search', views.search, name='search'),
 ]

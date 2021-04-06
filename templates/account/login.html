@@ -7,8 +7,8 @@
 	<form id="login_form" method="post" action="{% url 'oneWordStory:login' %}">
 		{% csrf_token %}
 		
-		Username: <input type="text" name="username" value="" size="50" /><br />
-		Password: <input type="password" name="password" value="" size="50" /><br />
+		Username: <input type="text" name="username" value="" /><br />
+		Password: <input type="password" name="password" value="" /><br />
 		
 		<input type="submit" value="Submit" />
 	</form>
