@@ -90,6 +90,7 @@ def show_story(request, story_name_slug):
         except Story.DoesNotExist:
             context_dict['story'] = None
             context_dict['words'] = None
+            context_dict['form'] = None
         return render(request, 'story/story.html', context = context_dict)
     
 def show_profile(request, user_name_slug):
@@ -194,3 +195,20 @@ def user_logout(request):
     logout(request)
     # Take the user back to the homepage.
     return redirect(reverse('oneWordStory:home'))
+    
+@login_required   
+def LikeStoryView(View):
+    def get(self, request):
+        story_name_slug = request.GET['story_slug']
+        
+        try:
+            story = Story.objects.get(slug=story_name_slug)
+        except Story.DoesNotExist:
+            return HttpResponse(-1)
+        except ValueError:
+            return HttpResponse(-1)
+        
+        story.likes = story.likes + 1
+        story.save()
+        
+        return HttpResponse(story.likes)
