@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title_block %}
+<title>Search</title>
+{% endblock %}
+{% block body_block %}
+<h1>Search</h1>
+Search by title for stories
+<form method="get" action="{% url 'oneWordStory:search' %}">
+<input type="text" name="s">
+<input type="submit" value="Search">
+{% if results %}
+<br><h2>Results:</h2>
+<ul>
+	{%for story in results %}
+		<li>
+			<a href="{% url 'oneWordStory:show_story' story.slug %}"> {{ story.title }}</a>
+		</li>
+	{% endfor %}
+</ul>
+{% endif %}
+{% endblock %}

@@ -36,7 +36,7 @@ def visitor_cookie_handler(request):
 
 def home(request):
     story_list = Story.objects.order_by('-likes')[:5]
-    print(story_list)
+    print(type(story_list))
     context_dict = {}
     context_dict['featuredStories'] = story_list
 
@@ -44,6 +44,23 @@ def home(request):
     context_dict['visits'] = request.session['visits']
     
     response = render(request, 'home.html', context=context_dict)
+
+    return response
+
+def search(request):
+    story_list = None
+    if request.method == 'GET' and 's' in request.GET:
+        s = request.GET['s']
+        if s:
+            story_list = Story.objects.filter(title__contains=s)
+    
+    context_dict = {}
+    context_dict['results'] = story_list
+
+    visitor_cookie_handler(request)
+    context_dict['visits'] = request.session['visits']
+    
+    response = render(request, 'search.html', context=context_dict)
 
     return response
 
