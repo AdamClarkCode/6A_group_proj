@@ -36,6 +36,7 @@ def visitor_cookie_handler(request):
 
 def home(request):
     story_list = Story.objects.order_by('-likes')[:5]
+    print(story_list)
     context_dict = {}
     context_dict['featuredStories'] = story_list
 
